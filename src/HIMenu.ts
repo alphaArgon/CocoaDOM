@@ -18,11 +18,11 @@ import { HIEvent, HISelector } from "./HIResponder.js";
 import { RangeSet } from "./RangeSet.js";
 import { HIFindDirectChildDOMFrom, HIGetReadonlyProxy, HISetDOMHasAttribute, HISetDOMState } from "./_HIUtils.js";
 import { _HIApplyTranslucencyForDOM, _HITranslucentStyle } from "./_HIVisualEffect.js";
+import { _HIAlignScanCoord, _HIAlignScanRect, _HIWithFreeSizeOfDOM } from "./_HISharedLayout.js";
 import type { HIPoint, HIRect } from "./HIGeometry.js";
 import type { HIPopUpButton } from "./HIPopUpButton.js";
 import type { HIValidatedUserInterfaceItem } from "./HIUserInterfaceValidations.js";
 import type { HIWindowSPI } from "./_HIInternal.js";
-import { _HIAlignScanCoord, _HIAlignScanRect, _HIWithFreeSizeOfDOM } from "./_HISharedLayout.js";
 
 
 export class HIMenuItem implements HIValidatedUserInterfaceItem {
@@ -76,7 +76,7 @@ export class HIMenuItem implements HIValidatedUserInterfaceItem {
     public set title(value: string) {
         if (this._separator) {return;}
         this._title = value;
-        
+
         this._changedKey = "title";
         this._menu?.itemChanged(this);
         this._changedKey = null;
@@ -226,7 +226,7 @@ export class HIMenu {
         this._view?.didChangeItemAt(index);
         HINotificationCenter.default.post(HIMenu.didChangeItemNotification, this, index);
     }
-    
+
     /** Returns the index to the first item whose title mostly starts with the given character. */
     public indexOfItemForCharacter(character: string, loopFrom: number = 0): number {
         let bestIndex = -1;
@@ -880,9 +880,13 @@ class _HIMenuWindow extends HIWindow {
         }
     }
 
-    /** @internal SPI to `HIWindow` */
-    public get suppressesOtherFirstMouse(): boolean {
+    public override get wantsModalWhenKey(): boolean {
         return true;
+    }
+
+    public override modalMouseDownOutsideWindow(event: HIEvent<MouseEvent>): void {
+        let menuView = (this.contentView as _HIMenuView);
+        menuView.closeAnimated(true);
     }
 
     public override becomeKeyWindow(): void {
@@ -897,9 +901,6 @@ class _HIMenuWindow extends HIWindow {
 
     public override resignKeyWindow(): void {
         super.resignKeyWindow();
-
-        let menuView = (this.contentView as _HIMenuView);
-        menuView.closeAnimated(true);
 
         if (this._savedKeyWindow !== null) {
             let isKey = this._savedKeyWindow.isKeyWindow;
@@ -929,7 +930,7 @@ class _HIMenuItemCell {
         this._titleDOM = document.createElement("span");
         this._titleDOM.classList.add("hi-menu-item-title");
         this.dom.appendChild(this._titleDOM);
-        
+
         this._imageDOM = null;
         this._stateImageDOM = null;
     }

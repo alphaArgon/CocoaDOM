@@ -148,7 +148,7 @@ This project is still in development, and API is subject to change.
 
 > *Note*: This repo doesn’t include the `dist` folder. You need to build the project first.
 
-The demo shows two windows. One window contains a set of controls that can customize the global appearance. The other window contains a custom view that allows you to draw strokes by dragging the mouse.
+The demo at `/test/demo.html` shows two windows. One window contains a set of controls that can customize the global appearance. The other window contains a custom view that allows you to draw strokes by dragging the mouse.
 
 <img src="test/demo.gif" alt="Demo" width="607">
 

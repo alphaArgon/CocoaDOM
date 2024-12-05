@@ -162,7 +162,7 @@ export class HIWindow extends HIResponder {
         window._state = _HIWindowState.orderedIn;
 
         let focusOneChanged = false;
-    
+
         document.addEventListener("keydown", () => {
             if (focusOneChanged && _HIKeyWindow !== null) {
                 (_HIKeyWindow as any)._checkKeyDOMFocus();
@@ -383,23 +383,27 @@ export class HIWindow extends HIResponder {
 
         HIEvent.push(event);
 
-        if (this !== _HIKeyWindow && nativeEvent.button === 0) {
-            //  `suppressesOtherFirstMouse` is an SPI of `_HIMenuWindow`.
-            let suppressFirstMouse = (_HIKeyWindow as any)?.suppressesOtherFirstMouse === true;
-
-            if (!event.isMetaKeyDown) {
-                if (view.shouldDelayWindowOrdering(event)) {
-                    this._mouseSession.orderFrontWhenUp = true;
-                } else {
-                    this.makeKeyAndOrderFront();
-                }
-            }
-
-            suppressFirstMouse ||= view.needsPanelToBecomeKey || !view.acceptsFirstMouse(event);
-            if (suppressFirstMouse) {
+        if (this !== _HIKeyWindow) {
+            if (_HIKeyWindow !== null && _HIKeyWindow.wantsModalWhenKey) {
+                _HIKeyWindow.modalMouseDownOutsideWindow(event);
                 HIEvent.pop(event);
                 this._mouseSession = null;
                 return;
+
+            } else if (event.type === HIEventType.mouseDown) {
+                if (!event.isMetaKeyDown) {
+                    if (view.shouldDelayWindowOrdering(event)) {
+                        this._mouseSession.orderFrontWhenUp = true;
+                    } else {
+                        this.makeKeyAndOrderFront();
+                    }
+                }
+
+                if (view.needsPanelToBecomeKey || !view.acceptsFirstMouse(event)) {
+                    HIEvent.pop(event);
+                    this._mouseSession = null;
+                    return;
+                }
             }
         }
 
@@ -625,6 +629,14 @@ export class HIWindow extends HIResponder {
     private _handleDOMContextMenu(nativeEvent: MouseEvent): void {
         nativeEvent.preventDefault();
         this._setCancelsNextNativeMenu(false);
+    }
+
+    public get wantsModalWhenKey(): boolean {
+        return false;
+    }
+
+    public modalMouseDownOutsideWindow(event: HIEvent<MouseEvent>): void {
+        return;
     }
 
     public get isMainWindow(): boolean {
@@ -988,7 +1000,7 @@ export class HIWindow extends HIResponder {
 
     private _makeInitialFirstResponder(): void {
         let current = this._firstResponder;
-        
+
         win: {
             if (!(current instanceof HIView)) {break win;}
             if (current.window !== this) {break win;}
