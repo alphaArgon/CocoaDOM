@@ -1,0 +1,208 @@
+<svg viewBox="0 0 384 64" width="384" height="64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <circle id="t" cx="8" cy="8" r="5.5" stroke-width="1"/>
+        <use id="o" xlink:href="#t" fill="#d0d0d0" stroke="#b2b2b2"/>
+        <use id="r" xlink:href="#t" fill="#ff6157" stroke="#e24640"/>
+        <use id="y" xlink:href="#t" fill="#ffc12f" stroke="#dfa023"/>
+        <use id="g" xlink:href="#t" fill="#2acb42" stroke="#1bac2c"/>
+        <use id="c" xlink:href="#t" fill="#8e8e93" stroke="#747479"/>
+        <use id="rh" xlink:href="#t" fill="#bf4842" stroke="#a12b25"/>
+        <use id="yh" xlink:href="#t" fill="#bf8e23" stroke="#a06f04"/>
+        <use id="gh" xlink:href="#t" fill="#1e9730" stroke="#007912"/>
+        <use id="ch" xlink:href="#t" fill="#6a6a6e" stroke="#505054"/>
+
+        <circle id="td" cx="8" cy="8" r="6"/>
+        <use id="od" xlink:href="#td" fill="#ffffff33"/>
+        <use id="rd" xlink:href="#td" fill="#ff6157"/>
+        <use id="yd" xlink:href="#td" fill="#ffc12f"/>
+        <use id="gd" xlink:href="#td" fill="#2acb42"/>
+        <use id="cd" xlink:href="#td" fill="#ffffff7f"/>
+        <use id="rdh" xlink:href="#td" fill="#bf4842"/>
+        <use id="ydh" xlink:href="#td" fill="#bf8e23"/>
+        <use id="gdh" xlink:href="#td" fill="#1e9730"/>
+        <use id="cdh" xlink:href="#td" fill="#ffffff9f"/>
+
+        <path id="cross" d="M8,7L9.75,5.25A.5.5 0 0 1 10.75,6.25L9 8L10.75,9.75A.5.5 0 0 1 9.75,10.75L8,9L6.25,10.75A.5.5 0 0 1 5.25,9.75L7,8L5.25,6.25A.5.5 0 0 1 6.25,5.25z"/>
+        <circle id="dot" cx="8" cy="8" r="2"/>
+        <rect id="minus" x="4" y="7" width="8" height="2" rx="1"/>
+        <path id="plus" d="M7,7L7,5A.5.5 0 0 1 9,5L9,7L11,7A.5.5 0 0 1 11,9L9,9L9,11A.5.5 0 0 1 7,11L7,9L5,9A.5.5 0 0 1 5,7z"/>
+        <path id="full" d="M5,6.5L5,10A1 1 0 0 0 6,11L9.5,11zM11,9.5L11,6A1 1 0 0 0 10,5L6.5,5z"/>
+        <path id="exit" d="M3.5,8L7,8A1 1 0 0 1 8,9L8,12.5zM8,3.5L8,7A1 1 0 0 0 9,8L12.5,8z"/>
+    </defs>
+
+    <use xlink:href="#o"/>
+    <use y="16" xlink:href="#r"/>
+    <use y="32" xlink:href="#r"/>
+    <use y="32" xlink:href="#cross" fill="#7e0508"/>
+    <use y="48" xlink:href="#rh"/>
+    <use y="48" xlink:href="#cross" fill="#4d0000"/>
+
+    <use x="16" xlink:href="#o"/>
+    <use x="16" xlink:href="#dot" fill="#6e6e6e"/>
+    <use x="16" y="16" xlink:href="#r"/>
+    <use x="16" y="16" xlink:href="#dot" fill="#7e0508"/>
+    <use x="16" y="32" xlink:href="#r"/>
+    <use x="16" y="32" xlink:href="#dot" fill="#7e0508"/>
+    <use x="16" y="48" xlink:href="#rh"/>
+    <use x="16" y="48" xlink:href="#dot" fill="#4d0000"/>
+
+    <use x="32" xlink:href="#o"/>
+    <use x="32" y="16" xlink:href="#y"/>
+    <use x="32" y="32" xlink:href="#y"/>
+    <use x="32" y="32" xlink:href="#minus" fill="#995900"/>
+    <use x="32" y="48" xlink:href="#yh"/>
+    <use x="32" y="48" xlink:href="#minus" fill="#592800"/>
+
+    <use x="48" xlink:href="#o"/>
+    <use x="48" y="16" xlink:href="#g"/>
+    <use x="48" y="32" xlink:href="#g"/>
+    <use x="48" y="32" xlink:href="#plus" fill="#006300"/>
+    <use x="48" y="48" xlink:href="#gh"/>
+    <use x="48" y="48" xlink:href="#plus" fill="#003100"/>
+
+    <use x="64" xlink:href="#o"/>
+    <use x="64" y="16" xlink:href="#g"/>
+    <use x="64" y="32" xlink:href="#g"/>
+    <use x="64" y="32" xlink:href="#full" fill="#006300"/>
+    <use x="64" y="48" xlink:href="#gh"/>
+    <use x="64" y="48" xlink:href="#full" fill="#003100"/>
+
+    <use x="80" xlink:href="#o"/>
+    <use x="80" y="16" xlink:href="#g"/>
+    <use x="80" y="32" xlink:href="#g"/>
+    <use x="80" y="32" xlink:href="#exit" fill="#006300"/>
+    <use x="80" y="48" xlink:href="#gh"/>
+    <use x="80" y="48" xlink:href="#exit" fill="#003100"/>
+
+    <use x="96" xlink:href="#o"/>
+    <use x="96" y="16" xlink:href="#c"/>
+    <use x="96" y="32" xlink:href="#c"/>
+    <use x="96" y="32" xlink:href="#cross" fill="#27272c"/>
+    <use x="96" y="48" xlink:href="#ch"/>
+    <use x="96" y="48" xlink:href="#cross" fill="#040407"/>
+
+    <use x="112" xlink:href="#o"/>
+    <use x="112" xlink:href="#dot" fill="#6e6e6e"/>
+    <use x="112" y="16" xlink:href="#c"/>
+    <use x="112" y="16" xlink:href="#dot" fill="#27272c"/>
+    <use x="112" y="32" xlink:href="#c"/>
+    <use x="112" y="32" xlink:href="#dot" fill="#27272c"/>
+    <use x="112" y="48" xlink:href="#ch"/>
+    <use x="112" y="48" xlink:href="#dot" fill="#040407"/>
+
+    <use x="128" xlink:href="#o"/>
+    <use x="128" y="16" xlink:href="#c"/>
+    <use x="128" y="32" xlink:href="#c"/>
+    <use x="128" y="32" xlink:href="#minus" fill="#27272c"/>
+    <use x="128" y="48" xlink:href="#ch"/>
+    <use x="128" y="48" xlink:href="#minus" fill="#040407"/>
+
+    <use x="144" xlink:href="#o"/>
+    <use x="144" y="16" xlink:href="#c"/>
+    <use x="144" y="32" xlink:href="#c"/>
+    <use x="144" y="32" xlink:href="#plus" fill="#27272c"/>
+    <use x="144" y="48" xlink:href="#ch"/>
+    <use x="144" y="48" xlink:href="#plus" fill="#040407"/>
+
+    <use x="160" xlink:href="#o"/>
+    <use x="160" y="16" xlink:href="#c"/>
+    <use x="160" y="32" xlink:href="#c"/>
+    <use x="160" y="32" xlink:href="#full" fill="#27272c"/>
+    <use x="160" y="48" xlink:href="#ch"/>
+    <use x="160" y="48" xlink:href="#full" fill="#040407"/>
+
+    <use x="176" xlink:href="#o"/>
+    <use x="176" y="16" xlink:href="#c"/>
+    <use x="176" y="32" xlink:href="#c"/>
+    <use x="176" y="32" xlink:href="#exit" fill="#27272c"/>
+    <use x="176" y="48" xlink:href="#ch"/>
+    <use x="176" y="48" xlink:href="#exit" fill="#040407"/>
+
+    <use x="192" xlink:href="#od"/>
+    <use x="192" y="16" xlink:href="#rd"/>
+    <use x="192" y="32" xlink:href="#rd"/>
+    <use x="192" y="32" xlink:href="#cross" fill="#7e0508"/>
+    <use x="192" y="48" xlink:href="#rdh"/>
+    <use x="192" y="48" xlink:href="#cross" fill="#4d0000"/>
+
+    <use x="208" xlink:href="#od"/>
+    <use x="208" xlink:href="#dot" fill="#0000007f"/>
+    <use x="208" y="16" xlink:href="#rd"/>
+    <use x="208" y="16" xlink:href="#dot" fill="#7e0508"/>
+    <use x="208" y="32" xlink:href="#rd"/>
+    <use x="208" y="32" xlink:href="#dot" fill="#7e0508"/>
+    <use x="208" y="48" xlink:href="#rdh"/>
+    <use x="208" y="48" xlink:href="#dot" fill="#4d0000"/>
+
+    <use x="224" xlink:href="#od"/>
+    <use x="224" y="16" xlink:href="#yd"/>
+    <use x="224" y="32" xlink:href="#yd"/>
+    <use x="224" y="32" xlink:href="#minus" fill="#995900"/>
+    <use x="224" y="48" xlink:href="#ydh"/>
+    <use x="224" y="48" xlink:href="#minus" fill="#592800"/>
+
+    <use x="240" xlink:href="#od"/>
+    <use x="240" y="16" xlink:href="#gd"/>
+    <use x="240" y="32" xlink:href="#gd"/>
+    <use x="240" y="32" xlink:href="#plus" fill="#006300"/>
+    <use x="240" y="48" xlink:href="#gdh"/>
+    <use x="240" y="48" xlink:href="#plus" fill="#003100"/>
+
+    <use x="256" xlink:href="#od"/>
+    <use x="256" y="16" xlink:href="#gd"/>
+    <use x="256" y="32" xlink:href="#gd"/>
+    <use x="256" y="32" xlink:href="#full" fill="#006300"/>
+    <use x="256" y="48" xlink:href="#gdh"/>
+    <use x="256" y="48" xlink:href="#full" fill="#003100"/>
+
+    <use x="272" xlink:href="#od"/>
+    <use x="272" y="16" xlink:href="#gd"/>
+    <use x="272" y="32" xlink:href="#gd"/>
+    <use x="272" y="32" xlink:href="#exit" fill="#006300"/>
+    <use x="272" y="48" xlink:href="#gdh"/>
+    <use x="272" y="48" xlink:href="#exit" fill="#003100"/>
+
+    <use x="288" xlink:href="#od"/>
+    <use x="288" y="16" xlink:href="#cd"/>
+    <use x="288" y="32" xlink:href="#cd"/>
+    <use x="288" y="32" xlink:href="#cross" fill="#222222"/>
+    <use x="288" y="48" xlink:href="#cdh"/>
+    <use x="288" y="48" xlink:href="#cross" fill="#222222"/>
+
+    <use x="304" xlink:href="#od"/>
+    <use x="304" xlink:href="#dot" fill="#6e6e6e"/>
+    <use x="304" y="16" xlink:href="#cd"/>
+    <use x="304" y="16" xlink:href="#dot" fill="#262626"/>
+    <use x="304" y="32" xlink:href="#cd"/>
+    <use x="304" y="32" xlink:href="#dot" fill="#262626"/>
+    <use x="304" y="48" xlink:href="#cdh"/>
+    <use x="304" y="48" xlink:href="#dot" fill="#262626"/>
+
+    <use x="320" xlink:href="#od"/>
+    <use x="320" y="16" xlink:href="#cd"/>
+    <use x="320" y="32" xlink:href="#cd"/>
+    <use x="320" y="32" xlink:href="#minus" fill="#262626"/>
+    <use x="320" y="48" xlink:href="#cdh"/>
+    <use x="320" y="48" xlink:href="#minus" fill="#262626"/>
+
+    <use x="336" xlink:href="#od"/>
+    <use x="336" y="16" xlink:href="#cd"/>
+    <use x="336" y="32" xlink:href="#cd"/>
+    <use x="336" y="32" xlink:href="#plus" fill="#262626"/>
+    <use x="336" y="48" xlink:href="#cdh"/>
+    <use x="336" y="48" xlink:href="#plus" fill="#262626"/>
+
+    <use x="352" xlink:href="#od"/>
+    <use x="352" y="16" xlink:href="#cd"/>
+    <use x="352" y="32" xlink:href="#cd"/>
+    <use x="352" y="32" xlink:href="#full" fill="#262626"/>
+    <use x="352" y="48" xlink:href="#cdh"/>
+    <use x="352" y="48" xlink:href="#full" fill="#262626"/>
+
+    <use x="368" xlink:href="#od"/>
+    <use x="368" y="16" xlink:href="#cd"/>
+    <use x="368" y="32" xlink:href="#cd"/>
+    <use x="368" y="32" xlink:href="#exit" fill="#262626"/>
+    <use x="368" y="48" xlink:href="#cdh"/>
+    <use x="368" y="48" xlink:href="#exit" fill="#262626"/>
+</svg>

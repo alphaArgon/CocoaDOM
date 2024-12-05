@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="dark light">
+    <link rel="stylesheet" href="../assets/index.css">
+</head>
+<body>
+    <script type="module">
+
+import appearanceWindow from "./AppearanceAdjust.js";
+import simplePathWindow from "./SimplePath.js";
+
+appearanceWindow.frame.x = 100;
+appearanceWindow.frame.y = 100;
+appearanceWindow.makeKeyAndOrderFront();
+
+simplePathWindow.frame.x = 200;
+simplePathWindow.frame.y = 350;
+simplePathWindow.makeKeyAndOrderFront();
+
+    </script>
+</body>
+</html>

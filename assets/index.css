@@ -1,0 +1,998 @@
+/*
+ *  index.css
+ *  HIToolbox
+ *
+ *  Created by alpha on 2024/11/15.
+ *  Copyright © 2024 alphaArgon.
+ */
+ 
+
+:root {
+    font: 13px/1.231 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --min-pixel: 1px;
+    --window-controls-image-url: url("./window_controls@1x.svg");
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.25) {:root {
+    --min-pixel: 0.8px;
+    --window-controls-image-url: url("./window_controls@2x.svg");
+}}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) {:root {
+    --min-pixel: 0.6666666667px;
+}}
+
+@media (-webkit-min-device-pixel-ratio: 1.75) {:root {
+    --min-pixel: 0.5714285714px;
+}}
+
+@media (-webkit-min-device-pixel-ratio: 2) {:root {
+    --min-pixel: 0.5px;
+}}
+
+@media (-webkit-min-device-pixel-ratio: 2.5) {:root {
+    --min-pixel: 0.4px;
+}}
+
+@media (-webkit-min-device-pixel-ratio: 3) {:root {
+    --min-pixel: 0.3333333333px;
+}}
+
+
+html {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+[selectable] {
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
+    cursor: auto;
+}
+
+svg {
+    /* To avoid safari rounding the bounding box to pixels. */
+    transform: scale(1);
+}
+
+:focus {
+    outline: none;
+}
+
+.hi-focus-ring {
+    position: absolute;
+    z-index: 1;
+    opacity: 0.5;
+    visibility: hidden;
+    pointer-events: none;
+    box-shadow: 0 0 0 3px var(--hi-control-accent-color), inset 0 0 0 var(--min-pixel) var(--hi-control-accent-color);
+
+    [key-or-main] & {
+        visibility: visible;
+
+        &.animated {
+            animation: hi-focusing-in 0.25s forwards;
+        }
+    }
+}
+
+@keyframes hi-focusing-in {
+    from {box-shadow: 0 0 0 16px transparent, inset 0 0 0 var(--min-pixel) transparent};
+}
+
+.hi-window-scene {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.hi-window {
+    position: absolute;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    color: var(--hi-control-text-color);
+    box-shadow: var(--hi-window-shadow);
+
+    &.main {
+        box-shadow: var(--hi-main-window-shadow);
+    }
+
+    &.titled {
+        border-radius: 5px;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: inherit;
+        border: rgba(255, 255, 255, 0.15) solid 1px;
+        visibility: var(--hi-window-glow-visibility);
+        pointer-events: none;
+    }
+}
+
+.hi-window-title-bar {
+    position: relative;
+    overflow: hidden;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    color: var(--hi-disabled-control-text-color);
+
+    [key-or-main] & {
+        color: var(--hi-window-frame-text-color);
+    }
+
+    .hi-window.full-size & {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+}
+
+.hi-window-title-bar-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    background: var(--hi-title-bar-background);
+    box-shadow: var(--hi-title-bar-shadow);
+
+    [key-or-main] & {
+        background: var(--hi-active-title-bar-background);
+        box-shadow: var(--hi-active-title-bar-shadow);
+    }
+
+    .hi-window.hi-window.key.full-size & {
+        -webkit-backdrop-filter: saturate(2) blur(20px);
+        backdrop-filter: saturate(2) blur(20px);
+    }
+}
+
+.hi-window-title-bar-content {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    & > * {
+        z-index: 1;  /* To make content above resizers */
+        transform: translateZ(0);  /* Fix for content invisible when dragging on Safari */
+    }
+}
+
+.hi-window-widget-buttons {
+    margin: 0 6px;
+    white-space: nowrap;
+    flex: none;
+    display: inline-flex;
+}
+
+.hi-window-title {
+    margin: 0 auto;
+    padding: 0 4px;
+    pointer-events: none;  /* To prevent text selection */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
+}
+
+.hi-window-title-bar-content.has-widget-buttons::after {
+    content: "";
+    width: 68px;
+    flex-shrink: 10000;
+}
+
+.hi-window-widget-button {
+    -webkit-appereance: none;
+    -moz-appereance: none;
+    appearance: none;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+    width: 16px;
+    height: 16px;
+    background: var(--window-controls-image-url) no-repeat;
+
+    &:disabled:not(#noop) {
+        background-position-y: 0;
+    }
+
+    .hi-window.key & {
+        background-position-y: -16px;
+    }
+
+    .hi-window-widget-buttons:hover &,
+    .hi-window-widget-buttons.active & {
+        background-position-y: -32px;
+    }
+
+    &.highlighted:not(.noop) {
+        background-position-y: -48px;
+    }
+
+    &.close {
+        background-position-x: var(--hi-widget-button-base-x);
+    }
+
+    &.close.dirty {
+        background-position-x: calc(var(--hi-widget-button-base-x) - 16px);
+    }
+
+    &.miniaturize {
+        background-position-x: calc(var(--hi-widget-button-base-x) - 32px);
+    }
+
+    &.zoom {
+        background-position-x: calc(var(--hi-widget-button-base-x) - 48px);
+    }
+
+    &.zoom.full-screen {
+        background-position-x: calc(var(--hi-widget-button-base-x) - 64px);
+    }
+
+    &.zoom.exit-full-screen {
+        background-position-x: calc(var(--hi-widget-button-base-x) - 80px);
+    }
+
+    & + & {
+        margin-left: 4px;
+    }
+}
+
+.hi-window-content {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+
+    &:first-child {
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+    }
+
+    > :first-child {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.hi-window-resizers {
+    pointer-events: none;
+    visibility: hidden;
+
+    [key-or-main] & {
+        visibility: visible;
+    }
+}
+
+.hi-window-resizer {
+    position: absolute;
+    pointer-events: auto;
+
+    &.nw {
+        top: -4px;
+        left: -4px;
+        width: 16px;
+        height: 16px;
+        cursor: nwse-resize;
+
+        &.inward {cursor: se-resize;}
+        &.outward {cursor: nw-resize;}
+    }
+
+    &.n {
+        top: -4px;
+        left: 12px;
+        right: 12px;
+        height: 8px;
+        cursor: ns-resize;
+
+        &.inward {cursor: s-resize;}
+        &.outward {cursor: n-resize;}
+    }
+
+    &.ne {
+        top: -4px;
+        right: -4px;
+        width: 16px;
+        height: 16px;
+        cursor: nesw-resize;
+
+        &.inward {cursor: sw-resize;}
+        &.outward {cursor: ne-resize;}
+    }
+
+    &.e {
+        top: 12px;
+        right: -4px;
+        bottom: 12px;
+        width: 8px;
+        cursor: ew-resize;
+
+        &.inward {cursor: w-resize;}
+        &.outward {cursor: e-resize;}
+    }
+
+    &.se {
+        right: -4px;
+        bottom: -4px;
+        width: 16px;
+        height: 16px;
+        cursor: nwse-resize;
+
+        &.inward {cursor: nw-resize;}
+        &.outward {cursor: se-resize;}
+    }
+
+    &.s {
+        left: 12px;
+        right: 12px;
+        bottom: -4px;
+        height: 8px;
+        cursor: ns-resize;
+
+        &.inward {cursor: n-resize;}
+        &.outward {cursor: s-resize;}
+    }
+
+    &.sw {
+        left: -4px;
+        bottom: -4px;
+        width: 16px;
+        height: 16px;
+        cursor: nesw-resize;
+
+        &.inward {cursor: ne-resize;}
+        &.outward {cursor: sw-resize;}
+    }
+
+    &.w {
+        top: 12px;
+        left: -4px;
+        bottom: 12px;
+        width: 8px;
+        cursor: ew-resize;
+
+        &.inward {cursor: e-resize;}
+        &.outward {cursor: w-resize;}
+    }
+}
+
+.hi-window-dragging-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    cursor: default;
+}
+
+
+.hi-image {
+    display: inline-block;
+}
+
+.hi-em-image-entity {
+    height: 1em;
+    line-height: 1em;
+    vertical-align: -0.2em;
+}
+
+
+/** LABELS **/
+
+.hi-label {
+    &[alignment="left"] {text-align: left;}
+    &[alignment="center"] {text-align: center;}
+    &[alignment="right"] {text-align: right;}
+}
+
+
+/** BUTTONS **/
+
+.hi-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: stretch;
+}
+
+.hi-button-cell {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    color: var(--hi-control-text-color);
+    flex: 1;
+
+    &.image-hugs-title {
+        &[alignment="left"] > .hi-button-content-tail,
+        &[alignment="center"] > .hi-button-content-tail {
+            margin-right: auto;
+        }
+
+        &[alignment="right"] > .hi-button-content-head,
+        &[alignment="center"] > .hi-button-content-head {
+            margin-left: auto;
+        }
+    }
+
+    &:not(.image-hugs-title) {
+        &[alignment="left"] > .hi-button-title,
+        &[alignment="center"] > .hi-button-title {
+            margin-right: auto;
+        }
+
+        &[alignment="right"] > .hi-button-title,
+        &[alignment="center"] > .hi-button-title {
+            margin-left: auto;
+        }
+    }
+}
+
+.hi-button-content-head + .hi-button-content-tail {
+    /* We can’t use margin-left here, because it will break the alignment of the title */
+    border-left: solid 4px transparent;
+}
+
+/* Rounded Button */
+
+.hi-button-cell.rounded {
+    padding: 1px 8px 2px;
+}
+
+.hi-button-bezel.rounded {
+    position: absolute;
+    top: calc(0px - var(--min-pixel));
+    left: calc(0px - var(--min-pixel));
+    right: calc(0px - var(--min-pixel));
+    bottom: calc(0px - var(--min-pixel));
+    border-radius: calc(3.5px + var(--min-pixel));
+    background: var(--hi-rounded-bezel-border-background);
+
+    ~ * {
+        /* To make sure the content is above the bezel */
+        position: relative;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: var(--min-pixel);
+        left: var(--min-pixel);
+        right: var(--min-pixel);
+        bottom: var(--min-pixel);
+        border-radius: 3.5px;
+        background: var(--hi-rounded-bezel-background);
+        box-shadow: var(--hi-rounded-bezel-shadow);
+    }
+
+    &[highlighted] {
+        &::before {
+            background: var(--hi-rounded-bezel-highlighted-background);
+        }
+    }
+
+    &[state="on"] {
+        &::before {
+            background: var(--hi-rounded-bezel-selected-background);
+        }
+
+        [key-or-main] & {
+            background: var(--hi-rounded-bezel-border-key-background);
+
+            &::before {
+                background: var(--hi-rounded-bezel-key-background);
+            }
+
+            ~ .hi-button-image,
+            ~ .hi-button-title {
+                color: var(--hi-selected-control-text-color);
+            }
+        }
+
+        &[highlighted] {
+            background: var(--hi-rounded-bezel-border-highlighted-key-background);
+
+            &::before {
+                background: var(--hi-rounded-bezel-highlighted-key-background);
+            }
+
+            ~ .hi-button-image,
+            ~ .hi-button-title {
+                color: var(--hi-selected-control-text-color);
+            }
+        }
+    }
+}
+
+/* Pop-Up Button */
+
+.hi-pop-up-button-cell > .hi-pop-up-button-arrow {
+    position: absolute;
+    display: inline-flex;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 1.231em;
+
+    > .hi-pop-up-button-arrow-glyph {
+        flex: 1;
+    }
+}
+
+.hi-pop-up-button-cell.rounded {
+    padding-right: 24px;
+}
+
+.hi-pop-up-button-bezel.rounded {
+    [key-or-main] & {
+        background: var(--hi-rounded-bezel-border-key-background) right / calc(16px + var(--min-pixel)) 100% no-repeat,
+                    var(--hi-rounded-bezel-border-background) left / calc(100% - 16px - var(--min-pixel)) 100% no-repeat;
+
+        &::before {
+            background: var(--hi-rounded-bezel-key-background) right / 16px 100% no-repeat,
+                        var(--hi-rounded-bezel-background) left / calc(100% - 16px) 100% no-repeat;
+        }
+
+        ~ .hi-pop-up-button-arrow {
+            color: var(--hi-selected-control-text-color);
+        }
+    }
+
+    &[highlighted] {
+        background: var(--hi-rounded-bezel-border-highlighted-key-background) right / calc(16px + var(--min-pixel)) 100% no-repeat,
+                    var(--hi-rounded-bezel-border-background) left / calc(100% - 16px - var(--min-pixel)) 100% no-repeat;
+
+        &::before {
+            background: var(--hi-rounded-bezel-highlighted-key-background) right / 16px 100% no-repeat,
+                        var(--hi-rounded-bezel-highlighted-background) left / calc(100% - 16px) 100% no-repeat;
+        }
+
+        ~ .hi-pop-up-button-arrow {
+            color: var(--hi-selected-control-text-color);
+        }
+    }
+}
+
+/* Checkbox and Radio Button */
+
+.hi-button-bezel.check,
+.hi-button-bezel.radio {
+    position: relative;
+    display: inline-block;
+    background: var(--hi-field-bezel-background-color);
+    box-shadow: var(--hi-field-bezel-shadow), inset 0 0 0 calc(1px + var(--min-pixel)) transparent;
+    --background-transition: background 0.25s ease-in-out;
+    --glyph-color-opacity-transition: opacity 0.25s, color 0.25s;
+
+    & + .hi-button-content-head {
+        margin-left: 2px;
+    }
+
+    & > .hi-button-state-glyph {
+        display: block;
+        position: absolute;
+        color: var(--hi-field-bezel-background-color);
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    &.animated {
+        transition: box-shadow 0.25s ease-in-out, var(--background-transition);
+
+        & > .hi-button-state-glyph {
+            transition: visibility 0.4s, transform 0.4s cubic-bezier(0.25, 0, 0, 1), var(--glyph-color-opacity-transition);
+        }
+    }
+
+    &[highlighted] {
+        background: var(--hi-field-bezel-highlighted-background-color);
+        box-shadow: var(--hi-field-bezel-shadow), inset 0 0 0 calc(1px + var(--min-pixel)) var(--hi-field-bezel-highlighted-ring-color);
+    }
+
+    &[state] {
+        --glyph-color-opacity-transition: opacity 0.1s, color 0.25s;
+
+        & > .hi-button-state-glyph {
+            color: var(--hi-control-text-color);
+        }
+
+        [key-or-main] & {
+            color: var(--hi-selected-control-text-color);
+            background: var(--hi-field-bezel-key-background-color);
+            box-shadow: var(--hi-field-bezel-key-shadow), inset 0 0 0 calc(1px + var(--min-pixel)) transparent;
+
+            &[highlighted] {
+                background: var(--hi-field-bezel-highlighted-key-background-color);
+                box-shadow: var(--hi-field-bezel-key-shadow), inset 0 0 0 calc(1px + var(--min-pixel)) var(--hi-field-bezel-highlighted-ring-color);
+            }
+
+            & > .hi-button-state-glyph {
+                opacity: 1;
+                color: var(--hi-selected-control-text-color);
+                filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.15));
+            }
+        }
+    }
+
+    &[state="on"] > .hi-button-state-glyph.on,
+    &[state="mixed"] > .hi-button-state-glyph.mixed {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+.hi-button-bezel.check {
+    width: 14px;
+    height: 14px;
+    margin: 2px;
+    padding: 0;
+    border-radius: 3px;
+
+    & > .hi-button-state-glyph {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;    
+        transform: scale(0);
+    }
+
+    &[state="on"] > .hi-button-state-glyph.on,
+    &[state="mixed"] > .hi-button-state-glyph.mixed {
+        transform: scale(1);
+    }
+}
+
+.hi-button-bezel.radio {
+    width: 14px;
+    height: 14px;
+    margin: 1px;
+    padding: 1px;
+    border-radius: 50%;
+
+    & > .hi-button-state-glyph {
+        top: 1px;
+        left: 1px;
+        right: 1px;
+        bottom: 1px;
+        visibility: hidden;
+
+        &.on {transform: scale(2.8);}
+        &.mixed {transform: scale(0)}
+    }
+
+    &[state] {
+        --background-transition: background 0.1s ease-in-out;
+    }
+
+    &[state="on"] > .hi-button-state-glyph.on,
+    &[state="mixed"] > .hi-button-state-glyph.mixed {
+        transform: scale(1);
+    }
+}
+
+
+/** VISUAL EFFECTS **/
+
+.hi-backdrop-translucency {
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    backdrop-filter: blur(20px) saturate(2);
+
+    &.monotone {
+        -webkit-backdrop-filter: blur(20px) saturate(0);
+        backdrop-filter: blur(20px) saturate(0);
+    }
+}
+
+
+/** MENUS **/
+
+.hi-menu-window {
+    border-radius: 5px;
+}
+
+.hi-menu {
+    overflow: hidden;
+}
+
+.hi-menu-content {
+    padding: 4px 0;
+    position: relative;
+}
+
+.hi-menu-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.hi-menu-separator {
+    margin: 5px 0;
+    border: none;
+    height: 2px;
+    background-color: var(--hi-disabled-control-text-color);
+    opacity: 0.5;
+}
+
+.hi-menu-item-cell {
+    padding: 1px 21px;
+    white-space: nowrap;
+    pointer-events: none;
+    position: relative;
+    color: var(--hi-control-text-color);
+
+    &[disabled] {
+        color: var(--hi-disabled-control-text-color);
+    }
+
+    &[highlighted] {
+        color: var(--hi-selected-control-text-color);
+    }
+}
+
+.hi-menu-state-image {
+    position: absolute;
+    top: 0;
+    left: 3px;
+    bottom: 0;
+    width: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .hi-menu.fading-state-column & {
+        transition: opacity 0.2s;
+        opacity: 0;
+    }
+}
+
+.hi-menu-backdrop.button-cap {
+    background: var(--hi-rounded-bezel-key-background);
+    visibility: hidden;
+    opacity: 0;
+
+    .hi-menu.fading-state-column & {
+        transition: opacity 0.1s 0.1s;
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+.hi-menu-button-cap-arrow-glyph {
+    position: absolute;
+    color: var(--hi-selected-control-text-color);
+
+    &.top {top: 0;}
+    &.bottom {bottom: 0;}
+}
+
+/** CONTAINERS **/
+
+.hi-box {
+    position: relative;
+}
+
+.hi-box-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.hi-box-subview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+
+    > * {flex: 1;}
+}
+
+
+/** SLIDERS **/
+
+.hi-slider {
+    display: inline-block;
+    position: relative;
+    vertical-align: -4px;
+    margin: 1px;
+    --percentage: 0;
+    --progress: 0;
+}
+
+.hi-slider-track {
+    height: 3px;
+    margin: 6px 0;
+    border-radius: 1.5px;
+    background: linear-gradient(to right, var(--hi-tertiary-label-color), var(--hi-tertiary-label-color));
+
+    [key-or-main] & {
+        background: linear-gradient(to right, var(--hi-field-bezel-key-background-color) var(--percentage), var(--hi-tertiary-label-color) 0);
+    }
+}
+
+.hi-slider-knob {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--hi-rounded-bezel-background), #777;
+    box-shadow: var(--hi-rounded-bezel-shadow), 0 0 0 var(--min-pixel) var(--hi-rounded-bezel-border-color);
+    position: absolute;
+    top: 0;
+    left: calc(var(--progress) * (100% - 15px));
+
+    &[highlighted] {
+        background: var(--hi-rounded-bezel-highlighted-background), #777;
+    }
+}
+
+/** SCROLL VIEWS **/
+
+.hi-scroll-view {
+    position: relative;
+    overflow: hidden;
+}
+
+.hi-scroll-scroll {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.hi-scroll-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.hi-scroll-insets {
+    display: table;
+}
+
+.hi-scroller {
+    position: relative;
+    overflow: hidden;
+    --knob-offset: 0;
+    --knob-size: 0;
+    --track-inset: 0;
+
+    &.full > .hi-scroller-knob {
+        display: none;
+    }
+
+    &.horizontal {
+        height: 16px;
+
+        .hi-scroll-view > & {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        & > .hi-scroller-knob {
+            top: 0;
+            bottom: 0;
+            left: var(--knob-offset);
+            width: var(--knob-size);
+        }
+
+        & > .hi-scroller-knob,
+        & > .hi-scroller-track {
+            top: var(--track-inset);
+            transition: top 0.25s, opacity 0.25s;
+        }
+    }
+
+    &.vertical {
+        width: 16px;
+
+        .hi-scroll-view > & {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        & > .hi-scroller-knob {
+            left: 0;
+            right: 0;
+            top: var(--knob-offset);
+            height: var(--knob-size);
+        }
+
+        & > .hi-scroller-knob,
+        & > .hi-scroller-track {
+            left: var(--track-inset);
+            transition: left 0.25s, opacity 0.25s;
+        }
+    }
+}
+
+.hi-scroller-knob {
+    position: absolute;
+    opacity: 0.8;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        right: 2px;
+        bottom: 2px;
+        border-radius: 7px;
+        border: solid 1px var(--hi-scroller-knob-border-color);
+        background: var(--hi-scroller-knob-color);
+        background-clip: padding-box;
+    }
+}
+
+.hi-scroller-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 1px var(--hi-tertiary-label-color);
+    background-color: var(--hi-scroller-lecacy-color);
+}
+
+.hi-scroller.overlay {
+    --track-inset: 3px;
+
+    &.full {
+        visibility: hidden;
+    }
+
+    &.idle {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s 0.75s, visibility 0.25s 0.75s;
+    }
+
+    & > .hi-scroller-track {
+        background-color: var(--hi-scroller-overlay-color);
+        opacity: 0;
+    }
+
+    [key-or-main] &:hover,
+    [key-or-main] &[highlighted] {
+        --track-inset: 0;
+        opacity: 1;
+        visibility: visible;
+
+        & > .hi-scroller-track {
+            opacity: 1;
+        }
+    }
+}
