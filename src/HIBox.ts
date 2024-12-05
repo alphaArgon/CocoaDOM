@@ -80,7 +80,7 @@ export class HIBox extends HIView {
             this._titleDOM = document.createElement("span");
             this._titleDOM.classList.add("hi-box-title");
         }
-        
+
         if (this._titleDOM.parentElement === null) {
             this._contentDOM.before(this._titleDOM);
         }
@@ -288,10 +288,10 @@ class _HIViewFrame implements HIViewFrame {
 
     public constructor(view: HIView) {
         let {width, height} = view.preferredSize;
-    
+
         let noWidth = width === HIView.noPreferredMetric;
         let noHeight = height === HIView.noPreferredMetric;
-    
+
         if (noWidth || noHeight) {
             _HIWithFreeSizeOfDOM(view.dom, size => {
                 if (noWidth) {width = size.width;}

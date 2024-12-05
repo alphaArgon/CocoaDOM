@@ -73,7 +73,7 @@ export class HIDrawingView extends HIView {
     public override layout(): void {
         let {width, height} = this.bounds;
         this._canvasScale = window.devicePixelRatio;
-        
+
         if (this._canvasDOM !== null) {
             this._canvasDOM.width = width * this._canvasScale;
             this._canvasDOM.height = height * this._canvasScale;

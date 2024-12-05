@@ -14,7 +14,7 @@ class AppearanceAdjustViewController extends HIViewController {
     _sliders;
     _systemCheckbox;
     _systemPopUp;
-    
+
     _useHSL;
     _useDark;
     _color;
@@ -106,7 +106,7 @@ class AppearanceAdjustViewController extends HIViewController {
 
         let h, s;
         let l = (max + min) / 2;
-    
+
         if (d === 0) {
             h = s = 0;
 
@@ -122,7 +122,7 @@ class AppearanceAdjustViewController extends HIViewController {
 
             h /= 6;
         }
-    
+
         return [h, s, l];
     }
 

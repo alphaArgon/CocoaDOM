@@ -261,7 +261,7 @@ export class _HIThemeFrame extends HIView {
 
         if (titled) {
             this._setTitlebarCoversContent((styleMask & HIWindowStyleMask.fullSizeContentView) !== 0);
-            
+
             let closable = (styleMask & HIWindowStyleMask.closable) !== 0;
             let miniaturizable = (styleMask & HIWindowStyleMask.miniaturizable) !== 0;
 
@@ -288,7 +288,7 @@ export class _HIThemeFrame extends HIView {
                 this.titleBar.removeFromSuperview();
             }
             this.frameDOM.classList.remove("titled");
-            
+
         } else {
             if (this.titleBar === null) {
                 (this as any).titleBar = new _HITitleBarView();

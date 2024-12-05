@@ -12,7 +12,7 @@ import type { HIViewSPI } from "./_HIInternal.js";
 
 
 export class HIViewController extends HIResponder {
-    
+
     private _title: string = "";
 
     private _view: Nullable<HIView> = null;
@@ -38,7 +38,7 @@ export class HIViewController extends HIResponder {
     public get view(): HIView {
         if (this._view === null) {
             this.loadView();
-            
+
             if (this._view === null) {
                 throw new Error("No view is set from `loadView`.");
             }

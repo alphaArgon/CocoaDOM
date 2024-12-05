@@ -43,7 +43,7 @@ export class HIButtonCell extends HICell {
 
     //  A cache to whether the type is `check` or `radio`.
     private _checkRadio: boolean;
-    
+
     private _image: Nullable<HIImage>;
     private _imagePosition: HIImagePosition;
     private _alignment: HITextAlignment;

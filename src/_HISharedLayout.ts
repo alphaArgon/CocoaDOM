@@ -87,7 +87,7 @@ export function _HIAlignScanRect(rect: Readonly<HIRect>): HIRect {
 
     let maxX = minX + width;
     let maxY = minY + height;
-    
+
     if (!Number.isFinite(minX)) {minX = 0;}
     else {minX = Math.floor(minX * scale) / scale;}
 

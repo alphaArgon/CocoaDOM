@@ -369,7 +369,7 @@ export class HIView extends HIResponder {
             this._subviews.splice(replaceIndex, 1);
             subview._superview = null;
             subview._dom.remove();
-            
+
             replacement._superview = this;
             this.insertDOMOfProposedSubview(replacement, replaceIndex);
             this._subviews.splice(replaceIndex, 0, replacement);
@@ -527,7 +527,7 @@ export class HIView extends HIResponder {
             view._willAppear();
         }
     }
- 
+
     private _windowDidAppear(): void {
         for (let view of HIBFSTraversal(this as HIView, "_subviews" as any)) {
             view._didAppear();
@@ -585,7 +585,7 @@ export class HIView extends HIResponder {
     public get trackingAreas(): readonly HITrackingArea[] {
         return HIGetReadonlyProxy(this._trackingAreas);
     }
-    
+
     public addTrackingArea(trackingArea: HITrackingArea): void {
         if (trackingArea.owner !== null) {
             throw new Error("The tracking area is already owned by another view.");
@@ -817,7 +817,7 @@ export class HIView extends HIResponder {
                 superview._calculateSubviewKeyOrderIfNeeded();
                 if (view._indexOfPrevKeySibling === -1) {
                     view = superview;
-    
+
                 } else {
                     view = superview._subviews[view._indexOfPrevKeySibling];
                     while (view._subviews.length) {

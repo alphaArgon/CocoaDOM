@@ -106,7 +106,7 @@ export class HIScrollView extends HIView {
         if (this._contentView !== null) {
             this._contentView.removeFromSuperview();
         }
-        
+
         this._contentView = view;
 
         if (this._contentView !== null) {

@@ -38,7 +38,7 @@ export abstract class HICell {
 
     public abstract get isHighlighted();
     public abstract set isHighlighted(value: boolean);
-    
+
     public abstract get state();
     public abstract set state(value: HIControlState);
 }

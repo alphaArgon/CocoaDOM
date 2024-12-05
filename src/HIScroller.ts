@@ -21,7 +21,7 @@ export const enum HIScrollerStyle {
 
 
 export class HIScroller extends HIControl {
-    
+
     private _value: number;
     private _knobProportion: number;
 

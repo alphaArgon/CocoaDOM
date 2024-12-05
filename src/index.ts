@@ -1,16 +1,16 @@
 declare global {
 
     type Nullable<T> = T | null;
-    
+
     type ConstructorOf<T> = {
         new (...args: any[]): T;
         prototype: T;
     };
-    
+
     type KeysOf<T, PropertyType = any> = any extends PropertyType ? keyof T : {
         [K in keyof T]: T[K] extends PropertyType ? K : never
     }[keyof T];
-    
+
 }
 
 export * from "./HIAnimator.js";

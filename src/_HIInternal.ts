@@ -80,7 +80,7 @@ export interface HIWindowSPI {
 
 
 export interface HIAppearanceSPI {
-    
+
     readonly _accentColor: Nullable<HIColor>;
 }
 
