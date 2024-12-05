@@ -15,10 +15,12 @@ import { _HIAlignScanRect } from "./_HISharedLayout.js";
 //  So we use a pool to reuse the canvas.
 const _HIDrawingViewCanvasDOMPool: HTMLCanvasElement[] = [];
 
+const _HIDrawingViewWholeRect: unique symbol = Symbol("HIDrawingViewWholeRect");
+
 
 export class HIDrawingView extends HIView {
 
-    private _dirtyRect: Nullable<HIRect>;  //  null means whole view
+    private _dirtyRect: Nullable<HIRect | typeof _HIDrawingViewWholeRect>;
     private _canvasDOM: Nullable<HTMLCanvasElement>;
     private _canvasScale: number;
 
@@ -36,12 +38,14 @@ export class HIDrawingView extends HIView {
     }
 
     public override setNeedsDisplay(inRect?: Readonly<HIRect>): void {
-        if (inRect !== undefined && this._dirtyRect !== null) {
-            this._dirtyRect = HIRectUnion(this._dirtyRect, inRect);
-        } else if (inRect !== undefined) {
+        if (inRect === undefined) {
+            this._dirtyRect = _HIDrawingViewWholeRect;
+
+        } else if (this._dirtyRect === null) {
             this._dirtyRect = inRect;
-        } else {
-            this._dirtyRect = null;
+
+        } else if (this._dirtyRect !== _HIDrawingViewWholeRect) {
+            this._dirtyRect = HIRectUnion(this._dirtyRect, inRect);
         }
 
         super.setNeedsDisplay();
@@ -49,8 +53,13 @@ export class HIDrawingView extends HIView {
 
     public override display(): void {
         let dirtyRect = this._dirtyRect;
-        if (dirtyRect === null) {dirtyRect = this.bounds;}
-        dirtyRect = _HIAlignScanRect(dirtyRect);
+        if (dirtyRect === null) {return;}
+
+        if (dirtyRect === _HIDrawingViewWholeRect) {
+            dirtyRect = this.bounds;
+        } else {
+            dirtyRect = _HIAlignScanRect(dirtyRect);
+        }
 
         let context = this._canvasDOM!.getContext("2d")!;
         context.save();
@@ -60,7 +69,7 @@ export class HIDrawingView extends HIView {
             context.clearRect(dirtyRect.x, dirtyRect.y, dirtyRect.width, dirtyRect.height);
         }
 
-        if (this._dirtyRect !== null) {
+        if (this._dirtyRect !== _HIDrawingViewWholeRect) {
             context.beginPath();
             context.rect(dirtyRect.x, dirtyRect.y, dirtyRect.width, dirtyRect.height);
             context.clip();
@@ -68,12 +77,14 @@ export class HIDrawingView extends HIView {
 
         this.drawRect(dirtyRect, context);
         context.restore();
+
+        this._dirtyRect = null;
     }
 
     public override layout(): void {
         let {width, height} = this.bounds;
         this._canvasScale = window.devicePixelRatio;
-
+        
         if (this._canvasDOM !== null) {
             this._canvasDOM.width = width * this._canvasScale;
             this._canvasDOM.height = height * this._canvasScale;
