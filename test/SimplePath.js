@@ -1,35 +1,30 @@
 /*
  *  SimplePath.ts
- *  Cocoa DOM
+ *  CocoaDOM
  *
  *  Created by alpha on 2024/12/5.
  *  Copyright © 2024 alphaArgon.
  */
 
-import { HIWindow, HIButton, HIColor, HIPopUpButton, HIBox, HIViewController, HIView } from "../dist/index.js";
+import { HIWindow, HIButton, HIColor, HIPopUpButton, HIBox, HIViewController, HIDrawingView } from "../dist/index.js";
 
 
-class SimplePathView extends HIView {
+class SimplePathView extends HIDrawingView {
 
-    _canvas;
-    _canvasScale;
     _backgroundColor;
     _foregroundColor;
     _polylines;
+    _lineWidth;
 
     delegate;
 
     constructor() {
         super();
 
-        this._canvas = document.createElement("canvas");
-        this._canvas.style.width = "100%";
-        this._canvas.style.height = "100%";
-        this.dom.appendChild(this._canvas);
-
         this._backgroundColor = HIColor.textBackground;
         this._foregroundColor = HIColor.controlAccent;
         this._polylines = [];
+        this._lineWidth = 4;
 
         this.delegate = null;
     }
@@ -38,28 +33,11 @@ class SimplePathView extends HIView {
         this.delegate?.viewDidChangeEffectiveAppearance(this);
     }
 
-    layout() {
-        let {width, height} = this.dom.getBoundingClientRect();
-        this._canvasScale = window.devicePixelRatio;
-        this._canvas.width = width * this._canvasScale;
-        this._canvas.height = height * this._canvasScale;
-    }
-
-    display() {
-        //  We do drawing here. This method is automatically if the system appearance is changed.
-        //  And `HIAppearance.current` is set.
-
-        let ctx = this._canvas.getContext("2d");
-        ctx.resetTransform();
-        ctx.scale(this._canvasScale, this._canvasScale);
-        
-        let width = this._canvas.width / this._canvasScale;
-        let height = this._canvas.height / this._canvasScale;
-
+    drawRect(rect, ctx) {
         ctx.fillStyle = this._backgroundColor.cssColor;
-        ctx.fillRect(0, 0, width, height);
+        ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
 
-        ctx.lineWidth = 4;
+        ctx.lineWidth = this._lineWidth;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
 
@@ -104,9 +82,28 @@ class SimplePathView extends HIView {
     }
 
     addPoint(x, y) {
-        let count = this._polylines.length;
-        this._polylines[count - 1].push({x, y});
-        this.setNeedsDisplay();
+        let polyline = this._polylines[this._polylines.length - 1];
+        let prevPoint = polyline[polyline.length - 1];
+        polyline.push({x, y});
+
+        if (prevPoint === undefined) {
+            polyline.pointBounds = {x, y, width: 0, height: 0};
+            this.setNeedsDisplay();
+
+        } else {
+            let minX = Math.min(prevPoint.x, x);
+            let minY = Math.min(prevPoint.y, y);
+            let maxX = Math.max(prevPoint.x, x);
+            let maxY = Math.max(prevPoint.y, y);
+
+            let dirtyRect = {x: minX, y: minY, width: maxX - minX, height: maxY - minY};
+            dirtyRect.x -= this._lineWidth / 2;
+            dirtyRect.y -= this._lineWidth / 2;
+            dirtyRect.width += this._lineWidth;
+            dirtyRect.height += this._lineWidth;
+
+            this.setNeedsDisplay(dirtyRect);
+        }
     }
 
     clear(sender) {

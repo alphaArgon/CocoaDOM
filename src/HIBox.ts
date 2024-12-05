@@ -6,11 +6,11 @@
  *  Copyright © 2024 alphaArgon.
  */
 
-import { HIEdgeInsets, HIRect, HISize, HIView } from "./HIView.js";
+import { HIView } from "./HIView.js";
 import { HIColor } from "./HIColor.js";
-import { HIRoundCoordinate, HIWithFreeSizeOfDOM } from "./_HIUtils.js";
+import { HIEdgeInsets, HIRect, HISize } from "./HIGeometry.js";
 import { HIObservableSetObserver, HIObservableSetValueForKey } from "./HIObservable.js";
-import { _HIContentInsets } from "./_HISharedLayout.js";
+import { _HIContentInsets, _HIAlignScanCoord, _HIWithFreeSizeOfDOM } from "./_HISharedLayout.js";
 
 
 export const enum HIViewAutoresizingMask {
@@ -193,10 +193,10 @@ export class HIBox extends HIView {
     public set contentInsets(insets: HIEdgeInsets) {
         if (insets === this._contentInsets) {return;}
         let {minX, minY, maxX, maxY} = insets;
-        minX = Math.max(0, HIRoundCoordinate(minX));
-        minY = Math.max(0, HIRoundCoordinate(minY));
-        maxX = Math.max(0, HIRoundCoordinate(maxX));
-        maxY = Math.max(0, HIRoundCoordinate(maxY));
+        minX = Math.max(0, _HIAlignScanCoord(minX));
+        minY = Math.max(0, _HIAlignScanCoord(minY));
+        maxX = Math.max(0, _HIAlignScanCoord(maxX));
+        maxY = Math.max(0, _HIAlignScanCoord(maxY));
         HIObservableSetValueForKey(this._contentInsets, "minX", minX);
         HIObservableSetValueForKey(this._contentInsets, "minY", minY);
         HIObservableSetValueForKey(this._contentInsets, "maxX", maxX);
@@ -209,7 +209,7 @@ export class HIBox extends HIView {
     public contentInsetsDidChange(insets: HIEdgeInsets, key: keyof HIEdgeInsets, newValue: number): void {
         if (insets !== this._contentInsets) {return;}
 
-        let fixed = Math.max(0, HIRoundCoordinate(newValue));
+        let fixed = Math.max(0, _HIAlignScanCoord(newValue));
         if (fixed !== newValue) {
             HIObservableSetValueForKey(this._contentInsets, key, fixed);
         }
@@ -293,14 +293,14 @@ class _HIViewFrame implements HIViewFrame {
         let noHeight = height === HIView.noPreferredMetric;
     
         if (noWidth || noHeight) {
-            HIWithFreeSizeOfDOM(view.dom, size => {
+            _HIWithFreeSizeOfDOM(view.dom, size => {
                 if (noWidth) {width = size.width;}
                 if (noHeight) {height = size.height;}
             });
         }
 
-        width = HIRoundCoordinate(width);
-        height = HIRoundCoordinate(height);
+        width = _HIAlignScanCoord(width);
+        height = _HIAlignScanCoord(height);
 
         this._xArg1 = 0;
         this._xArg2 = width;
@@ -329,7 +329,7 @@ class _HIViewFrame implements HIViewFrame {
     }
 
     public set x(x: number) {
-        x = HIRoundCoordinate(x);
+        x = _HIAlignScanCoord(x);
         this.setXAndWidth(x, this.width);
     }
 
@@ -340,7 +340,7 @@ class _HIViewFrame implements HIViewFrame {
     }
 
     public set y(y: number) {
-        y = HIRoundCoordinate(y);
+        y = _HIAlignScanCoord(y);
         this.setYAndHeight(y, this.height);
     }
 
@@ -351,7 +351,7 @@ class _HIViewFrame implements HIViewFrame {
     }
 
     public set width(width: number) {
-        width = HIRoundCoordinate(width);
+        width = _HIAlignScanCoord(width);
         this.setXAndWidth(this.x, width);
     }
 
@@ -362,7 +362,7 @@ class _HIViewFrame implements HIViewFrame {
     }
 
     public set height(height: number) {
-        height = HIRoundCoordinate(height);
+        height = _HIAlignScanCoord(height);
         this.setYAndHeight(this.y, height);
     }
 

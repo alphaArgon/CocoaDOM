@@ -10,9 +10,10 @@ import { HIColor } from "./HIColor.js";
 import { HIObservableSetObserver, HIObservableSetValueForKey } from "./HIObservable.js";
 import { HIEvent } from "./HIResponder.js";
 import { HIScroller, HIScrollerStyle } from "./HIScroller.js";
-import { HIEdgeInsets, HIPoint, HISize, HIView } from "./HIView.js";
-import { _HIContentInsets } from "./_HISharedLayout.js";
-import { HIFindDirectChildDOMFrom, HIRoundCoordinate } from "./_HIUtils.js";
+import { HIView } from "./HIView.js";
+import { HIFindDirectChildDOMFrom } from "./_HIUtils.js";
+import { _HIAlignScanCoord, _HIContentInsets } from "./_HISharedLayout.js";
+import type { HIEdgeInsets, HIPoint } from "./HIGeometry.js";
 
 
 export class HIScrollView extends HIView {
@@ -120,10 +121,10 @@ export class HIScrollView extends HIView {
     public set contentInsets(insets: HIEdgeInsets) {
         if (insets === this._contentInsets) {return;}
         let {minX, minY, maxX, maxY} = insets;
-        minX = Math.max(0, HIRoundCoordinate(minX));
-        minY = Math.max(0, HIRoundCoordinate(minY));
-        maxX = Math.max(0, HIRoundCoordinate(maxX));
-        maxY = Math.max(0, HIRoundCoordinate(maxY));
+        minX = Math.max(0, _HIAlignScanCoord(minX));
+        minY = Math.max(0, _HIAlignScanCoord(minY));
+        maxX = Math.max(0, _HIAlignScanCoord(maxX));
+        maxY = Math.max(0, _HIAlignScanCoord(maxY));
         HIObservableSetValueForKey(this._contentInsets, "minX", minX);
         HIObservableSetValueForKey(this._contentInsets, "minY", minY);
         HIObservableSetValueForKey(this._contentInsets, "maxX", maxX);
@@ -136,7 +137,7 @@ export class HIScrollView extends HIView {
     public contentInsetsDidChange(insets: HIEdgeInsets, key: keyof HIEdgeInsets, newValue: number): void {
         if (insets !== this._contentInsets) {return;}
 
-        let fixed = Math.max(0, HIRoundCoordinate(newValue));
+        let fixed = Math.max(0, _HIAlignScanCoord(newValue));
         if (fixed !== newValue) {
             HIObservableSetValueForKey(this._contentInsets, key, fixed);
         }

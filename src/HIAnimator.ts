@@ -6,7 +6,7 @@
  *  Copyright © 2024 alphaArgon.
  */
 
-import type { HIPoint, HIRect } from "./HIView.js";
+import type { HIPoint, HIRect } from "./HIGeometry.js";
 
 
 export type HITimingFunction = (progress: number) => number;

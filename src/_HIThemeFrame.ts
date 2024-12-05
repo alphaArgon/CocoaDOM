@@ -6,16 +6,16 @@
  *  Copyright © 2024 alphaArgon.
  */
 
-import { HIRect, HISize, HIView } from "./HIView.js";
+import { HIView } from "./HIView.js";
 import { HIColor } from "./HIColor.js";
 import { HIAppearance } from "./HIAppearance.js";
-import { HINotification, HINotificationCenter } from "./HINotification.js";
 import { HIObservable, HIObservableSetObserver, HIObservableSetValueForKey } from "./HIObservable.js";
-import { _HITitleBarView, _HIWidgetButton } from "./_HITitleBarView.js";
 import { HIViewSPI, HIWindowSPI } from "./_HIInternal.js";
-import { _HICheckedSize } from "./_HISharedLayout.js";
-import { HIRoundCoordinate, HIRoundRect, HIRoundSize, HISavedGetter, HISetDOMHasAttribute } from "./_HIUtils.js";
+import { HISavedGetter, HISetDOMHasAttribute } from "./_HIUtils.js";
+import { _HITitleBarView, _HIWidgetButton } from "./_HITitleBarView.js";
+import { _HIAlignScanCoord, _HIAlignScanRect, _HIAlignScanSize, _HICheckedSize } from "./_HISharedLayout.js";
 import type { HIEvent, HIResponder, HISelector } from "./HIResponder.js";
+import type { HIRect, HISize } from "./HIGeometry.js";
 
 
 export const enum HIWindowStyleMask {
@@ -144,7 +144,7 @@ export class _HIThemeFrame extends HIView {
 
             if (this._frameSizeOnceSet) {return;}
 
-            let {width, height} = HIRoundSize(view.preferredSize);
+            let {width, height} = _HIAlignScanSize(view.preferredSize);
             if (width <= 0 || height <= 0) {return;}
 
             let {x, y} = this.frame;
@@ -174,7 +174,7 @@ export class _HIThemeFrame extends HIView {
     public setFrame(rect: HIRect): void {
         if (rect === this.frame) {return;}
 
-        let {x, y, width, height} = HIRoundRect(rect);
+        let {x, y, width, height} = _HIAlignScanRect(rect);
         HIObservableSetValueForKey(this.frame, "x", x);
         HIObservableSetValueForKey(this.frame, "y", y);
         HIObservableSetValueForKey(this.frame, "width", width);
@@ -190,7 +190,7 @@ export class _HIThemeFrame extends HIView {
     }
 
     public frameDidChange(frame: _HIFrameRect, key: keyof _HIFrameRect, newValue: number): void {
-        let fixedValue = HIRoundCoordinate(newValue);
+        let fixedValue = _HIAlignScanCoord(newValue);
         if (fixedValue !== newValue) {
             HIObservableSetValueForKey(this.frame, key, fixedValue);
         }

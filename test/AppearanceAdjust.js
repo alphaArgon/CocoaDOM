@@ -1,6 +1,6 @@
 /*
  *  AppearanceAdjust.ts
- *  Cocoa DOM
+ *  CocoaDOM
  *
  *  Created by alpha on 2024/11/28.
  *  Copyright © 2024 alphaArgon.

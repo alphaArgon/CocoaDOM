@@ -7,7 +7,7 @@
  */
 
 import { _HIWindowDragType } from "./_HIThemeFrame.js";
-import type { HIRect, HISize } from "./HIView.js";
+import type { HIRect, HISize } from "./HIGeometry.js";
 
 
 export function _HIResizingCursor(type: _HIWindowDragType): string {

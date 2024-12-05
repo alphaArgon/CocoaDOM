@@ -9,18 +9,20 @@
 import { HIWindow, HIWindowLevel } from "./HIWindow.js";
 import { HIAnimator, HIRectInterpolation } from "./HIAnimator.js";
 import { HINotificationCenter, HINotificationName } from "./HINotification.js";
-import { HIPoint, HIRect, HIView } from "./HIView.js";
+import { HIView } from "./HIView.js";
 import { HIControlState } from "./HIControl.js";
 import { HIColor } from "./HIColor.js";
 import { HIImage } from "./HIImage.js";
 import { HITrackingArea, HITrackingAreaOptions } from "./HITrackingArea.js";
 import { HIEvent, HISelector } from "./HIResponder.js";
 import { RangeSet } from "./RangeSet.js";
-import { HIFindDirectChildDOMFrom, HIGetReadonlyProxy, HIRoundCoordinate, HIRoundRect, HISetDOMHasAttribute, HISetDOMState, HIWithFreeSizeOfDOM } from "./_HIUtils.js";
+import { HIFindDirectChildDOMFrom, HIGetReadonlyProxy, HISetDOMHasAttribute, HISetDOMState } from "./_HIUtils.js";
 import { _HIApplyTranslucencyForDOM, _HITranslucentStyle } from "./_HIVisualEffect.js";
+import type { HIPoint, HIRect } from "./HIGeometry.js";
 import type { HIPopUpButton } from "./HIPopUpButton.js";
-import type { HIWindowSPI } from "./_HIInternal.js";
 import type { HIValidatedUserInterfaceItem } from "./HIUserInterfaceValidations.js";
+import type { HIWindowSPI } from "./_HIInternal.js";
+import { _HIAlignScanCoord, _HIAlignScanRect, _HIWithFreeSizeOfDOM } from "./_HISharedLayout.js";
 
 
 export class HIMenuItem implements HIValidatedUserInterfaceItem {
@@ -802,7 +804,7 @@ class _HIMenuWindow extends HIWindow {
 
         let {x, y} = rect;
         let itemOffset = null as Nullable<HIPoint>;
-        let {width, height} = HIWithFreeSizeOfDOM(menuView.dom, size => {
+        let {width, height} = _HIWithFreeSizeOfDOM(menuView.dom, size => {
             size.width = Math.max(size.width, minWidth);
 
             if (itemIndex !== -1) {
@@ -868,8 +870,8 @@ class _HIMenuWindow extends HIWindow {
 
             return HIAnimator.frameByFrame(fadeDuration, animator => {
                 let x = animator.value;
-                let rect = HIRoundRect(frameInterpolation.rectAt(x));
-                let itemScreenY = HIRoundCoordinate(oldItemScreenY + (newItemScreenY - oldItemScreenY) * x);
+                let rect = _HIAlignScanRect(frameInterpolation.rectAt(x));
+                let itemScreenY = _HIAlignScanCoord(oldItemScreenY + (newItemScreenY - oldItemScreenY) * x);
                 this.frame = rect;
                 menuView.originOutset = {x: rect.x - oldX, y: rect.y + itemOffsetY - itemScreenY};
             }).thenOrCatch(() => {

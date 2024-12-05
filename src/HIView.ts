@@ -14,31 +14,7 @@ import type { HIWindow } from "./HIWindow.js";
 import type { HIViewController } from "./HIViewController.js";
 import type { HITrackingArea } from "./HITrackingArea.js";
 import type { HIMenu } from "./HIMenu.js";
-
-
-export type HIPoint = {
-    x: number;
-    y: number;
-}
-
-export type HISize = {
-    width: number;
-    height: number;
-}
-
-export type HIRect = {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-
-export type HIEdgeInsets = {
-    minX: number;
-    minY: number;
-    maxX: number;
-    maxY: number;
-}
+import type { HISize } from "./HIGeometry.js";
 
 
 /** A wrapper of a DOM object that can be added to a view hierarchy. */

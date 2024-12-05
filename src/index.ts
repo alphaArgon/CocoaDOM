@@ -21,6 +21,7 @@ export * from "./HIButtonCell.js";
 export * from "./HICell.js";
 export * from "./HIColor.js";
 export * from "./HIControl.js";
+export * from "./HIDrawingView.js";
 export * from "./HIImage.js";
 export * from "./HILabel.js";
 export * from "./HIMenu.js";

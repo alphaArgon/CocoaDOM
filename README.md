@@ -80,7 +80,7 @@ This project is still in development, and API is subject to change.
         - [x] Event handling
         - [x] Appearance
         - [x] Set needs layout
-        - [ ] *Custom drawing* — under consideration
+        - [x] *Custom drawing* — by subclass `HIDrawingView`
         - [x] `HIControl`
             - [ ] Control sizes
             - [x] `HIButton`

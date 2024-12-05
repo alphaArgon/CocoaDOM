@@ -7,7 +7,7 @@
  */
 
 import { HIEvent, HIEventType, HIResponder, HISelector } from "./HIResponder.js";
-import { HIPoint, HIRect, HISize, HIView } from "./HIView.js";
+import { HIView } from "./HIView.js";
 import { HIAppearance } from "./HIAppearance.js";
 import { HIAnimator } from "./HIAnimator.js";
 import { HINotificationCenter, HINotificationName } from "./HINotification.js";
@@ -17,6 +17,7 @@ import { _HIResizingCursor, _HIWindowDragFrame, _HIWindowFixFrame } from "./_HIW
 import { _HIWindowState, HIViewSPI } from "./_HIInternal.js";
 import type { HIColor } from "./HIColor.js";
 import type { HIViewController } from "./HIViewController.js";
+import type { HIPoint, HIRect, HISize } from "./HIGeometry.js";
 
 
 export { HIWindowStyleMask };
