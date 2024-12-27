@@ -15,7 +15,7 @@ import { HISavedGetter, HISetDOMHasAttribute } from "./_HIUtils.js";
 import { _HITitleBarView, _HIWidgetButton } from "./_HITitleBarView.js";
 import { _HIAlignScanCoord, _HIAlignScanRect, _HIAlignScanSize, _HICheckedSize } from "./_HISharedLayout.js";
 import type { HIEvent, HIResponder, HISelector } from "./HIResponder.js";
-import type { HIRect, HISize } from "./HIGeometry.js";
+import type { HIPoint, HIRect, HISize } from "./HIGeometry.js";
 
 
 export const enum HIWindowStyleMask {
@@ -395,6 +395,21 @@ export class _HIThemeFrame extends HIView {
     public override mouseDown(event: HIEvent<MouseEvent>): void {
         let dragType = this._resizerDOMs.indexOf(event.native.target as HTMLElement);
         (this.window as any as HIWindowSPI)._performDrag(event, dragType);
+    }
+
+    public hitTestIgnoringResizers(point: HIPoint): Nullable<HIView> {
+        if (this._resizersDOM !== null) {
+            this._resizersDOM.style.visibility = "hidden";
+        }
+
+        let hitDOM = document.elementFromPoint(point.x, point.y);
+        let hitView = hitDOM === null ? null : this.viewWithDOM(hitDOM);
+
+        if (this._resizersDOM !== null) {
+            this._resizersDOM.style.visibility = "";
+        }
+
+        return hitView;
     }
 }
 

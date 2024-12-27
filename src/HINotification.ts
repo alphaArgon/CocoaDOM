@@ -64,9 +64,6 @@ export class HINotificationCenter {
         let observers = observation.get(name);
         if (observers === undefined) {return;}
 
-        let selectors = observers.get(observer);
-        if (selectors === undefined) {return;}
-
         observers.delete(observer);
 
         //  We don’t need to clean up observation from anonymous sender.

@@ -150,12 +150,12 @@ export class HIView extends HIResponder {
       *
       * The DOM of the returned view, if any, may not be exactly the same as the specified DOM, but
       * must be a nearest ancestor of the specified DOM that is associated with a view. */
-    public viewWithDOM(dom: HTMLElement): Nullable<HIView> {
-        let domChain = [] as HTMLElement[];
-        let currentDOM = dom as Nullable<HTMLElement>;
+    public viewWithDOM(dom: Node): Nullable<HIView> {
+        let domChain = [] as Node[];
+        let currentDOM = dom as Nullable<Node>;
         while (currentDOM !== null && currentDOM !== this._dom) {
             domChain.push(currentDOM);
-            currentDOM = currentDOM.parentElement;
+            currentDOM = currentDOM.parentNode;
         }
 
         if (currentDOM === null) {return null;}
@@ -293,6 +293,7 @@ export class HIView extends HIResponder {
                 let dropIndex = viewSuper._subviews.indexOf(view);
                 viewSuper._subviews.splice(dropIndex, 1);
                 viewSuper.setNeedsLayout();
+                viewSuper._setNeedsCalculateSubviewKeyOrder();
             }
 
             view._superview = this;
@@ -364,6 +365,7 @@ export class HIView extends HIResponder {
                 let dropIndex = replacementSuper._subviews.indexOf(replacement);
                 replacementSuper._subviews.splice(dropIndex, 1);
                 replacementSuper.setNeedsLayout();
+                replacementSuper._setNeedsCalculateSubviewKeyOrder();
             }
 
             this._subviews.splice(replaceIndex, 1);
@@ -436,53 +438,32 @@ export class HIView extends HIResponder {
         let oldWindow = this._window;
         if (oldWindow === window) {return;}
 
-        //  The view must follow the following lifecycle:
-        //      viewWillAppear -> (viewDidAppear -> viewWillDisappear)* -> viewDidDisappear
-        //
-        //  That is, `viewDidDisappear` must be balanced with `viewWillAppear`, and
-        //  `viewWillDisappear` must be balanced with `viewDidAppear`.
-        //
-        //  Moving between windows that have the same state is trivial, and does not need to call
-        //  any observing methods. However, consider the following cases:
-        //
-        //  - 01: ordered out -> ordered in:    call `viewWillAppear` and `viewDidAppear`.
-        //  - 02: ordered out -> ordering in:   call `viewWillAppear` only. `viewDidAppear` will be called later.
-        //  - 03: ordered out -> ordering out:  call `viewWillAppear` only. `viewDidDisappear` will be called later.
-        //
-        //  - 04: ordering in -> ordered in:    call `viewDidAppear` only. `viewWillAppear` was called earlier.
-        //  - 06: ordering in -> ordering out:  do nothing. `viewWillAppear` was called earlier, `viewDidDisappear` will be called later.
-        //  - 07: ordering in -> ordered out:   call `viewDidDisappear` only. `viewWillAppear` was called earlier.
-        //
-        //  - 08: ordered in -> ordered out:    call `viewWillDisappear` and `viewDidDisappear`.
-        //  - 09: ordered in -> ordering out:   call `viewWillDisappear` only. `viewDidDisappear` will be called later.
-        //  - 11: ordered in -> ordering in:    `viewDidAppear` will be called later, therefore call `viewWillDisappear` to balance.
-        //
-        //  - 12: ordering out -> ordered out:  call `viewDidDisappear` only. `viewWillDisappear` was called earlier.
-        //  - 13: ordering out -> ordering in:  do nothing. `viewWillDisappear` was called earlier, `viewDidAppear` will be called later.
-        //  - 14: ordering out -> ordered in:   `viewWillDisappear` was called earlier, therefore call `viewWillAppear` to balance.
-
         let oldState = oldWindow === null ? _HIWindowState.orderedOut : (oldWindow as any as HIWindowSPI)._state;
         let newState = window === null ? _HIWindowState.orderedOut : (window as any as HIWindowSPI)._state;
 
         let willAppear = false, didAppear = false, willDisappear = false, didDisappear = false;
 
+        //  (willAppear -> (didAppear -> willDisappear)* -> didDisappear)*
         switch ((oldState << 2) | newState) {
-        case  0: break;
-        case  1: willAppear = true; didAppear = true; break;
-        case  2: willAppear = true; break;
-        case  3: willAppear = true; break;
-        case  4: didAppear = true; break;
-        case  5: break;
-        case  6: break;
-        case  7: didDisappear = true; break;
-        case  8: willDisappear = true; didDisappear = true; break;
-        case  9: willDisappear = true; break;
-        case 10: break;
-        case 11: willDisappear = true; break;
-        case 12: didDisappear = true; break;
-        case 13: break;
-        case 14: willAppear = true; break;
-        case 15: break;
+        case  0: /* hidden -> hidden */     break;
+        case  1: /* hidden -> showing */    willAppear = true; break;
+        case  2: /* hidden -> shown */      willAppear = true; didAppear = true; break;
+        case  3: /* hidden -> hiding */     willAppear = true; break;
+
+        case  4: /* showing -> hidden */    didDisappear = true; break;
+        case  5: /* showing -> showing */   break;
+        case  6: /* showing -> shown */     didAppear = true; break;
+        case  7: /* showing -> hiding */    break;
+
+        case  8: /* shown -> hidden */      willDisappear = true; didDisappear = true; break;
+        case  9: /* shown -> showing */     willDisappear = true; break;
+        case 10: /* shown -> shown */       break;
+        case 11: /* shown -> hiding */      willDisappear = true; break;
+
+        case 12: /* hiding -> hidden */     didDisappear = true; break;
+        case 13: /* hiding -> showing */    break;
+        case 14: /* hiding -> shown */      didAppear = true; break;
+        case 15: /* hiding -> hiding */     break;
         }
 
         let oldFirstResponder = oldWindow === null ? null : oldWindow.firstResponder;

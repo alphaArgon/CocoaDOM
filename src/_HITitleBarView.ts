@@ -153,7 +153,7 @@ class _HIWidgetButtons extends HIView {
 
         this.window!.preventOrdering();
         this.dom.classList.add("active");
-        (event.native.target as HTMLElement).classList.add("highlighted");
+        this.dom.children[this._mouseDownButton].classList.add("highlighted");
     }
 
     public override mouseDragged(event: HIEvent<MouseEvent>): void {
@@ -161,7 +161,7 @@ class _HIWidgetButtons extends HIView {
             return super.mouseDragged(event);
         }
 
-        let stillOn = event.isMouseInDOM(this.dom.children[this._mouseDownButton] as HTMLElement);
+        let stillOn = event.isMouseInDOM(this.dom.children[this._mouseDownButton]);
         this.dom.children[this._mouseDownButton].classList.toggle("highlighted", stillOn);
     }
 
@@ -170,7 +170,7 @@ class _HIWidgetButtons extends HIView {
             return super.mouseUp(event);
         }
 
-        let stillOn = event.isMouseInDOM(this.dom.children[this._mouseDownButton] as HTMLElement);
+        let stillOn = event.isMouseInDOM(this.dom.children[this._mouseDownButton]);
 
         if (stillOn)
         switch (this._mouseDownButton) {
@@ -180,7 +180,7 @@ class _HIWidgetButtons extends HIView {
         }
 
         this.dom.classList.remove("active");
-        (this.dom.children[this._mouseDownButton] as HTMLElement).classList.remove("highlighted");
+        this.dom.children[this._mouseDownButton].classList.remove("highlighted");
     }
 }
 

@@ -61,12 +61,21 @@ export function HISavedGetter(target: {}, key: PropertyKey, descriptor: Property
 
 
 export function *HIBFSTraversal<T>(root: T, childrenKey: KeysOf<T, Iterable<T>>): Generator<T> {
-    let queue = [root];
+    //  See `/test/bfsPerformance.js` for the reason why we use a linked list here.
+    type Item = {node: T, next: Nullable<Item>};
+
+    let head = {node: root, next: null} as Nullable<Item>;
+    let tail = head;
+
     do {
-        let node = queue.shift()!;
-        yield node;
-        queue.push(...node[childrenKey] as Iterable<T>);
-    } while (queue.length);
+        yield head!.node;
+
+        for (let node of head!.node[childrenKey] as Iterable<T>) {
+            tail = tail!.next = {node, next: null};
+        }
+
+        head = head!.next;
+    } while (head !== null);
 }
 
 export function *HIPreOrderTraversal<T>(root: T, childrenKey: KeysOf<T, Iterable<T>>): Generator<T> {
@@ -84,32 +93,32 @@ export function *HIPostOrderTraversal<T>(root: T, childrenKey: KeysOf<T, Iterabl
 }
 
 
-/** Returns the first element that matches the predicate by traversing the DOM tree upwards from the
-  * given descendant element. If `limit` is provided and reached, the search stops and returns null. */
-export function HIFindDOMUpwards(descendant: Element, predicate: (element: Element) => boolean, limit?: Element): Nullable<Element> {
-    let limitElement = limit ?? null;
-    let element = descendant as Nullable<Element>;
-    while (element !== null && element !== limitElement) {
-        if (predicate(element)) {return element;}
-        element = element.parentElement;
+/** Returns the first node that matches the predicate by traversing the DOM tree upwards from the
+  * given descendant node. If `limit` is provided and reached, the search stops and returns null. */
+export function HIFindDOMUpwards(descendant: Node, predicate: (node: Node) => boolean, limit?: Node): Nullable<Node> {
+    let limitNode = limit ?? null;
+    let node = descendant as Nullable<Node>;
+    while (node !== null && node !== limitNode) {
+        if (predicate(node)) {return node;}
+        node = node.parentNode;
     }
     return null;
 }
 
 
-/** Returns the direct child element of the given `parent` that is an ancestor of the given 
-  * `descendant`, or null if no such element exists.
+/** Returns the direct child node of the given `parent` that is an ancestor of the given 
+  * `descendant`, or null if no such node exists.
   *
   * This function is equivalent to the following code, but more efficient:
   * 
-  *     HIFindDOMUpwards(descendant, (element) => element === parent), parent)
+  *     HIFindDOMUpwards(descendant, (node) => node === parent), parent)
   */
-export function HIFindDirectChildDOMFrom(descendant: Element, parent: Element): Nullable<Element> {
-    let current = descendant as Nullable<Element>;
-    let currentParent = current!.parentElement;
+export function HIFindDirectChildDOMFrom(descendant: Node, parent: Node): Nullable<Node> {
+    let current = descendant as Nullable<Node>;
+    let currentParent = current!.parentNode;
     while (currentParent !== null && currentParent !== parent) {
         current = currentParent;
-        currentParent = current.parentElement;
+        currentParent = current.parentNode;
     }
     return currentParent === parent ? current : null;
 }

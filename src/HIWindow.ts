@@ -617,6 +617,28 @@ export class HIWindow extends HIResponder {
 
             //  Doing so to update cursors of the resizers.
             this._frameView.setFrame({x, y, width, height});
+
+        } else if (this._mouseSession.type !== _HIWindowDragType.move) {
+            //  macOS does so, that if the mouse is down at a resizer without dragging, the view
+            //  beneath is clicked.
+            let {clientX: x, clientY: y} = nativeEvent;
+            x += window.scrollX;
+            y += window.scrollY;
+
+            let view = this._frameView.hitTestIgnoringResizers({x, y});
+            if (view !== null) {
+                let moudeDown = new HIEvent(HIEventType.mouseDown, nativeEvent);
+                HIEvent.push(moudeDown);
+                view.mouseDown(moudeDown);
+                HIEvent.pop(moudeDown);
+
+                let mouseUp = new HIEvent(HIEventType.mouseUp, nativeEvent);
+                HIEvent.push(mouseUp);
+                view.mouseUp(mouseUp);
+                HIEvent.pop(mouseUp);
+
+                this._setCancelsNextNativeMenu(!mouseUp.allowsNativeDefault);
+            }
         }
 
         if (nativeEvent.buttons === 0) {

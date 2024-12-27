@@ -128,7 +128,7 @@ export class HIEvent<Native extends Event = Event> {
             : (this.native as any).ctrlKey === true;
     }
 
-    public isMouseInDOM(dom: HTMLElement): boolean {
+    public isMouseInDOM(dom: Element): boolean {
         if (!(this.native instanceof MouseEvent)) {return false;}
         let {clientX: x, clientY: y} = this.native;
         let {left, top, right, bottom} = dom.getBoundingClientRect();
